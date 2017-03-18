@@ -1,0 +1,12 @@
+<component name="libraryTable">
+  <library name="xbanner-1.2.2">
+    <CLASSES>
+      <root url="jar://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.xhb/xbanner/1.2.2/jars/classes.jar!/" />
+      <root url="file://$PROJECT_DIR$/app/build/intermediates/exploded-aar/com.xhb/xbanner/1.2.2/res" />
+    </CLASSES>
+    <JAVADOC />
+    <SOURCES>
+      <root url="jar://$USER_HOME$/.gradle/caches/modules-2/files-2.1/com.xhb/xbanner/1.2.2/32bb583bb6996998389fc69f00c3b22f0f4a7d37/xbanner-1.2.2-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
