@@ -4,10 +4,12 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import com.winelx.a10942.shop.Adapter.HomeFragmentAdapter;
 import com.winelx.a10942.shop.R;
@@ -46,8 +48,19 @@ public class HomeFragment extends Fragment {
     private void initData() {
 //创建线性布局
         mRecyclerView = (RecyclerView) this.rootView.findViewById(R.id.mRecyclerView);
-        mRecyclerView.setLayoutManager(new GridLayoutManager(mRecyclerView.getContext(), 2, GridLayoutManager.VERTICAL, false));
+        mRecyclerView.setLayoutManager(new LinearLayoutManager(mRecyclerView.getContext(), LinearLayoutManager.VERTICAL, false));
         mRecyclerView.setAdapter(mAdapter = new HomeFragmentAdapter(mContext));
+        mAdapter.setOnItemClickLitener(new HomeFragmentAdapter.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(mContext, "position:" + position, Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
         initview();
         initbanenr();
     }
@@ -66,7 +79,6 @@ public class HomeFragment extends Fragment {
         ArrayList<Classify> list = new ArrayList<>();
         list.add(new Classify("http://img1.imgtn.bdimg.com/it/u=1820076929,3421851540&fm=23&gp=0.jpg", "分类1"));
         list.add(new Classify("http://img2.imgtn.bdimg.com/it/u=3925774092,2129890416&fm=23&gp=0.jpg", "分类2"));
-        list.add(new Classify("http://img0.imgtn.bdimg.com/it/u=997872387,2883297873&fm=23&gp=0.jpg", "分类3"));
         list.add(new Classify("http://img4.imgtn.bdimg.com/it/u=1918421557,2242330443&fm=23&gp=0.jpg", "分类4"));
         list.add(new Classify("http://img2.imgtn.bdimg.com/it/u=704254373,1442787759&fm=23&gp=0.jpg", "分类5"));
         list.add(new Classify("http://img3.imgtn.bdimg.com/it/u=1985615566,1072172087&fm=23&gp=0.jpg", "分类6"));

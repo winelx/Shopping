@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.stx.xhb.xbanner.XBanner;
+import com.winelx.a10942.shop.MainActivity;
 import com.winelx.a10942.shop.Manager.FullyGridLayoutManager;
 import com.winelx.a10942.shop.R;
 import com.winelx.a10942.shop.bean.Classify;
@@ -33,6 +35,7 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter {
     private Context mContext;
     private ArrayList<Classify> results;
     private ArrayList<String> Xbanner;
+    private RecycleItemAdapterType mAdapterType;
     public static final int TYPE_TOP = 0xff01;
     public static final int TYPE_XBANNR = 0xff02;
     public static final int TYPE_MAIN = 0xff03;
@@ -66,13 +69,31 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter {
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(final RecyclerView.ViewHolder holder, int position) {
         if (holder instanceof TypeTopsliderHolder) {
             bindType1((TypeTopsliderHolder) holder, position);
         } else if (holder instanceof TypeBannersliderHolder && Xbanner.size() != 0 && ((TypeBannersliderHolder) holder).banner.getRealCount() == 0) {
             bindType2((TypeBannersliderHolder) holder, Xbanner);
         } else {
 
+        }
+
+        if (mOnItemClickLitener != null) {
+            holder.itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickLitener.onItemClick(holder.itemView, pos);
+                }
+            });
+            holder.itemView.setOnLongClickListener(new View.OnLongClickListener() {
+                @Override
+                public boolean onLongClick(View v) {
+                    int pos = holder.getLayoutPosition();
+                    mOnItemClickLitener.onItemLongClick(holder.itemView, pos);
+                    return false;
+                }
+            });
         }
     }
 
@@ -115,10 +136,24 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter {
     }
 
 
-    private void bindType1(TypeTopsliderHolder holder, int position) {
+    private void bindType1(TypeTopsliderHolder holder, final int position) {
         holder.mRecycler.setLayoutManager(new FullyGridLayoutManager(holder.mRecycler.getContext(), 3, GridLayoutManager.VERTICAL, false));
-        holder.mRecycler.setAdapter(new RecycleItemAdapterType(mContext, results));
+        mAdapterType = new RecycleItemAdapterType(mContext, results);
+        holder.mRecycler.setAdapter(mAdapterType);
         holder.mRecycler.setNestedScrollingEnabled(false);
+        mAdapterType.setOnItemClickLitener(new RecycleItemAdapterType.OnItemClickLitener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                Toast.makeText(mContext, "第" + position + "分类",
+                        Toast.LENGTH_SHORT).show();
+            }
+
+            @Override
+            public void onItemLongClick(View view, int position) {
+
+            }
+        });
+
     }
 
     //轮播图的数据适配
@@ -130,6 +165,12 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter {
             @Override
             public void loadBanner(XBanner banner, View view, int position) {
                 Glide.with(mContext).load(Xbanner.get(position)).into((ImageView) view);
+            }
+        });
+        banner.setOnItemClickListener(new XBanner.OnItemClickListener() {
+            @Override
+            public void onItemClick(XBanner banner, int position) {
+                Toast.makeText(mContext, "点击了第" + position + "图片", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -177,4 +218,18 @@ public class HomeFragmentAdapter extends RecyclerView.Adapter {
         notifyDataSetChanged();
 
     }
+
+
+    public interface OnItemClickLitener {
+        void onItemClick(View view, int position);
+
+        void onItemLongClick(View view, int position);
+    }
+
+    private OnItemClickLitener mOnItemClickLitener;
+
+    public void setOnItemClickLitener(OnItemClickLitener mOnItemClickLitener) {
+        this.mOnItemClickLitener = mOnItemClickLitener;
+    }
+
 }
